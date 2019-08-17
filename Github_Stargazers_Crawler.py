@@ -23,12 +23,12 @@ class github(object):
         r.keep_alive = False
     def get_list(self):
         j = 1
-        attempts = 0
-        success = False
         url2 = self.url
         name_list = []
         temp = self.star_num//30+1
         for i in range(temp):
+            attempts = 0
+            success = False
             while attempts < 10 and not success:
                 try:
                     r = requests.get(url2)
@@ -44,7 +44,7 @@ class github(object):
                     temp2=soup.find('a', rel="nofollow", class_="btn btn-outline BtnGroup-item",text = 'Next')
                     url2 = temp2['href']
                     r.keep_alive = False
-                    success = False
+                    success = True
                     j = j + 1
                 except BaseException as e:
                     print(e)
@@ -64,7 +64,7 @@ class github(object):
 
     def get_table(self):
         if self.name_list == None:
-            name_list = list(pd.read_csv('github_'+self.name+'.txt',index_col=False).iloc[:,1])
+            name_list = list(pd.read_csv('github_'+self.name+'.txt',header = None).iloc[:,1])
         else:
             name_list = self.name_list
         result = pd.DataFrame(np.full([len(name_list),6], np.nan),columns = ["Repositories","Projects",\
@@ -83,7 +83,6 @@ class github(object):
                     r = requests.get(url)
                     demo = r.text
                     soup = BeautifulSoup(demo, "html.parser")
-
                     temp = soup.find_all('a', class_="UnderlineNav-item mr-0 mr-md-1 mr-lg-3 ")
                     temp_num = []
                     for k in range(5):
@@ -95,7 +94,7 @@ class github(object):
                     end = time.time()
                     print('time cost',end-start,'s')
                     r.keep_alive = False
-                    success = False
+                    success = True
                 except BaseException as e:
                     print(e)
                     attempts += 1
@@ -114,15 +113,15 @@ class github(object):
         self.get_table(self)
 
 if __name__ == '__main__':
-#    a=github('https://github.com/taosdata/TDengine/stargazers')  #1
-#    a=github("https://github.com/zstackio/zstack/stargazers")  #2
-#    a=github('https://github.com/pingcap/tidb/stargazers')  #3
-#    a=github('https://github.com/influxdata/telegraf/stargazers')  #4
-#    a=github('https://github.com/Kong/kong/stargazers')  #5
-#    a=github('https://github.com/hashicorp/terraform/stargazers')   #6
-    star=github('https://github.com/elastic/elasticsearch/stargazers')    #7
-#    a=github('https://github.com/mongodb/mongo/stargazers')   #8
+#    star=github('https://github.com/taosdata/TDengine/stargazers')  #1
+#    star=github("https://github.com/zstackio/zstack/stargazers")  #2
+#    star=github('https://github.com/pingcap/tidb/stargazers')  #3
+#    star=github('https://github.com/influxdata/telegraf/stargazers')  #4
+#    star=github('https://github.com/Kong/kong/stargazers')  #5
+#    star=github('https://github.com/hashicorp/terraform/stargazers')   #6
+#    star=github('https://github.com/elastic/elasticsearch/stargazers')    #7
+    star=github('https://github.com/mongodb/mongo/stargazers')   #8
     print("star num: ",str(star.star_num))
-#    star.get_list()
-#    star.get_table()
-    star.run()
+    star.get_list()
+    star.get_table()
+#    star.run()
