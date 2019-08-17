@@ -24,9 +24,11 @@ class github(object):
     def get_list(self):
         j = 1
         url2 = self.url
-        name_list = []
+        self.name_list = []
         temp = self.star_num//30+1
         for i in range(temp):
+            if len(self.name_list) > self.star_num-1:
+                break
             attempts = 0
             success = False
             while attempts < 10 and not success:
@@ -39,8 +41,8 @@ class github(object):
                     while i < len(temp1):
                         temp1_2=temp1[i].find('a')
                         i = i+1
-                        print(self.name,':      star_num:  ',self.star_num,'      name:',temp1_2.text,' round: ', str(j),'  num: ',str(i))
-                        name_list.append(temp1_2.text)
+                        self.name_list.append(temp1_2.text)
+                        print(self.name,':      star_num:  ',self.star_num,'      name:',temp1_2.text,' round: ', str(j),'  num: ',str(i),"   Done")
                     temp2=soup.find('a', rel="nofollow", class_="btn btn-outline BtnGroup-item",text = 'Next')
                     url2 = temp2['href']
                     r.keep_alive = False
@@ -57,28 +59,26 @@ class github(object):
                         time.sleep(120)
                     if attempts >= 10:
                         break
-                    if len(name_list) > self.star_num-1:
-                        break
-        self.name_list = name_list
-        pd.Series(name_list).to_csv('github_'+self.name+'.txt')
+
+        pd.Series(self.name_list).to_csv('github_'+self.name+'.txt')
 
     def get_table(self):
         if self.name_list == None:
             name_list = list(pd.read_csv('github_'+self.name+'.txt',header = None).iloc[:,1])
         else:
             name_list = self.name_list
-        result = pd.DataFrame(np.full([len(name_list),6], np.nan),columns = ["Repositories","Projects",\
+        self.result = pd.DataFrame(np.full([len(name_list),6], np.nan),columns = ["Repositories","Projects",\
                               "Stars", "Followers","Following","Contributions in the last year"])
-        result.index = pd.Series(name_list)
+        self.result.index = pd.Series(name_list)
         j = 0
         for i in name_list:
+            if j > self.star_num - 1:
+                break
             attempts = 0
             success = False
             while attempts < 10 and not success:
                 try:
                     start = time.time()
-                    j = j + 1
-                    print(self.name,":     star_num:  ",self.star_num,"   num:  ", str(j),"   name:   ", i)
                     url = 'https://github.com/' + i
                     r = requests.get(url)
                     demo = r.text
@@ -90,11 +90,13 @@ class github(object):
                         temp_num.append(num.split()[0])
                     temp2 = soup.find('h2', class_="f4 text-normal mb-2")
                     temp_num.append(temp2.text.split()[0])
-                    result.loc[i] = temp_num
+                    self.result.loc[i] = temp_num
                     end = time.time()
                     print('time cost',end-start,'s')
                     r.keep_alive = False
                     success = True
+                    j = j + 1
+                    print(self.name,":     star_num:  ",self.star_num,"   num:  ", str(j),"   name:   ", i,"    Done")
                 except BaseException as e:
                     print(e)
                     attempts += 1
@@ -106,9 +108,7 @@ class github(object):
                         time.sleep(120)
                     if attempts >= 10:
                         break
-                    if j > self.star_num-1:
-                        break
-        result.to_csv('github_'+self.name+'.csv')
+        self.result.to_csv('github_'+self.name+'.csv')
 
     def run(self):
         self.get_list()
@@ -119,10 +119,10 @@ if __name__ == '__main__':
 #    star=github("https://github.com/zstackio/zstack/stargazers")  #2
 #    star=github('https://github.com/pingcap/tidb/stargazers')  #3
 #    star=github('https://github.com/influxdata/telegraf/stargazers')  #4
-    star=github('https://github.com/Kong/kong/stargazers')  #5
+#    star=github('https://github.com/Kong/kong/stargazers')  #5
 #    star=github('https://github.com/hashicorp/terraform/stargazers')   #6
 #    star=github('https://github.com/elastic/elasticsearch/stargazers')    #7
-#    star=github('https://github.com/mongodb/mongo/stargazers')   #8
+    star=github('https://github.com/mongodb/mongo/stargazers')   #8
     print("star num: ",str(star.star_num))
 #    star.get_list()
     star.get_table()
