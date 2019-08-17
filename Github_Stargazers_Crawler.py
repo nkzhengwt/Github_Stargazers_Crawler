@@ -109,8 +109,8 @@ class github(object):
         result.to_csv('github_'+self.name+'.csv')
 
     def run(self):
-        self.get_list(self)
-        self.get_table(self)
+        self.get_list()
+        self.get_table()
 
 if __name__ == '__main__':
 #    star=github('https://github.com/taosdata/TDengine/stargazers')  #1
