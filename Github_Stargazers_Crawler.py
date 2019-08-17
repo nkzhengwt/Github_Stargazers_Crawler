@@ -125,5 +125,5 @@ if __name__ == '__main__':
     star=github('https://github.com/mongodb/mongo/stargazers')   #8
     print("star num: ",str(star.star_num))
 #    star.get_list()
-    star.get_table()
-#    star.run()
+#    star.get_table()
+    star.run()
