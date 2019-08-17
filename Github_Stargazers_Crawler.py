@@ -57,8 +57,8 @@ class github(object):
                         time.sleep(120)
                     if attempts == 10:
                         break
-            if len(name_list) > self.star_num:
-                break
+                    if len(name_list) > self.star_num - 1:
+                        break
         self.name_list = name_list
         pd.Series(name_list).to_csv('github_'+self.name+'.txt')
 
