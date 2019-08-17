@@ -55,9 +55,9 @@ class github(object):
                         time.sleep(20)
                     else:
                         time.sleep(120)
-                    if attempts == 10:
+                    if attempts >= 10:
                         break
-                    if len(name_list) > self.star_num - 1:
+                    if len(name_list) > self.star_num-1:
                         break
         self.name_list = name_list
         pd.Series(name_list).to_csv('github_'+self.name+'.txt')
@@ -104,7 +104,9 @@ class github(object):
                         time.sleep(20)
                     else:
                         time.sleep(120)
-                    if attempts == 10:
+                    if attempts >= 10:
+                        break
+                    if j > self.star_num-1:
                         break
         result.to_csv('github_'+self.name+'.csv')
 
@@ -117,11 +119,11 @@ if __name__ == '__main__':
 #    star=github("https://github.com/zstackio/zstack/stargazers")  #2
 #    star=github('https://github.com/pingcap/tidb/stargazers')  #3
 #    star=github('https://github.com/influxdata/telegraf/stargazers')  #4
-#    star=github('https://github.com/Kong/kong/stargazers')  #5
+    star=github('https://github.com/Kong/kong/stargazers')  #5
 #    star=github('https://github.com/hashicorp/terraform/stargazers')   #6
 #    star=github('https://github.com/elastic/elasticsearch/stargazers')    #7
-    star=github('https://github.com/mongodb/mongo/stargazers')   #8
+#    star=github('https://github.com/mongodb/mongo/stargazers')   #8
     print("star num: ",str(star.star_num))
-    star.get_list()
+#    star.get_list()
     star.get_table()
 #    star.run()
