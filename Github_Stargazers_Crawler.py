@@ -20,6 +20,7 @@ class github(object):
         temp1 = soup.find('a', class_="social-count js-social-count")
         self.star_num = int(temp1.text.split()[0].replace(",",""))
         self.name_list = None
+        self.info_list = None
         r.keep_alive = False
 
     def get_list(self):
@@ -74,17 +75,17 @@ class github(object):
                         time.sleep(120)
                     if attempts >= 10:
                         break
-        self.info_list = pd.DataFrame(self.info_list,index = self.name_list, names = "info" )
-        pd.Series(self.name_list).to_csv('github_'+self.name+'.txt')
-        self.info_list.to_csv('github_info_'+self.name+'.csv')
+        self.info_list = pd.DataFrame(self.info_list,index = self.name_list, columns= ["info"] )
+        pd.Series(self.name_list).to_csv('github_'+self.name+'.txt',encoding="utf_8")
+        self.info_list.to_csv('github_info_'+self.name+'.csv',encoding="utf_8")
 
     def get_table(self):
-        if self.name_list == None:
+        if self.name_list is None:
             name_list = list(pd.read_csv('github_'+self.name+'.txt',header = None).iloc[:,1])
         else:
             name_list = self.name_list
-        if self.info_list == None:
-            self.info_list = pd.read_csv('github_info_'+self.name+'.csv',index_col = 0, names = 'info')#header=None
+        if self.info_list is None:
+            self.info_list = pd.read_csv('github_info_'+self.name+'.csv',index_col = 0)#header=None, names=["info"]
         self.result = pd.DataFrame(np.full([len(name_list),6], np.nan),columns = ["Repositories","Projects",\
                               "Stars", "Followers","Following","Contributions in the last year"])
         self.result.index = pd.Series(name_list)
@@ -128,7 +129,7 @@ class github(object):
                         break
         self.result.to_csv('github_'+self.name+'.csv')
         self.result2 = pd.merge(self.result, self.info_list, left_index=True, right_index=True)
-        self.result.to_csv('github_tot_'+self.name+'.csv')
+        self.result2.to_csv('github_tot_'+self.name+'.csv')
 
     def run(self):
         self.get_list()
@@ -137,13 +138,14 @@ class github(object):
 if __name__ == '__main__':
 #    star=github('https://github.com/taosdata/TDengine/stargazers')  #1
 #    star=github("https://github.com/zstackio/zstack/stargazers")  #2
-#    star=github('https://github.com/pingcap/tidb/stargazers')  #3
+#    star=github('https://github.com/pingcap/tidb/stargazers')  #3 #1
 #    star=github('https://github.com/influxdata/telegraf/stargazers')  #4
-#    star=github('https://github.com/Kong/kong/stargazers')  #5
-    star=github('https://github.com/hashicorp/terraform/stargazers')   #6
-#    star=github('https://github.com/elastic/elasticsearch/stargazers')    #7
-#    star=github('https://github.com/mongodb/mongo/stargazers')   #8
+#    star=github('https://github.com/Kong/kong/stargazers')  #5 #2
+#    star=github('https://github.com/hashicorp/terraform/stargazers')   #6#3
+#    star=github('https://github.com/elastic/elasticsearch/stargazers')    #7#4
+#    star=github('https://github.com/mongodb/mongo/stargazers')   #8#5
+    star=github('https://github.com/influxdata/influxdb/stargazers') #6
     print("star num: ",str(star.star_num))
 #    star.get_list()
-#    star.get_table()
-    star.run()
+    star.get_table()
+#    star.run()
