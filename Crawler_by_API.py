@@ -58,7 +58,7 @@ def star(name):
             print(name,num,'stop')
             break
     if over == False:
-        if not os.path.exist(filePath+'\\star_'+name+'_'+str(num)+'.csv') and num > 1:
+        if not os.path.exists(filePath+'\\star_'+name+'_'+str(num)+'.csv') and num > 1:
             star.to_csv(filePath+'\\star_'+name+'_'+str(num)+'.csv',index = False,header = False)
     else:
         star.to_csv(filePath+'\\star_'+name+'.csv',index = False,header = False)
@@ -109,7 +109,7 @@ def fork(name):
             print(name,num,'stop')
             break
     if over == False:
-        if not os.path.exist(filePath+'\\fork_'+name+'_'+str(num)+'.csv') and num > 1:
+        if not os.path.exists(filePath+'\\fork_'+name+'_'+str(num)+'.csv') and num > 1:
             star.to_csv(filePath+'\\fork_'+name+'_'+str(num)+'.csv',index = False,header = False)
     else:
         star.to_csv(filePath+'\\fork_'+name+'.csv',index = False,header = False)
@@ -160,7 +160,7 @@ def commits(name):
             print(name,num,'stop')
             break
     if over == False:
-        if not os.path.exist(filePath+'\\comm_'+name+'_'+str(num)+'.csv') and num > 1:
+        if not os.path.exists(filePath+'\\comm_'+name+'_'+str(num)+'.csv') and num > 1:
             star.to_csv(filePath+'\\comm_'+name+'_'+str(num)+'.csv',index = False,header = False)
     else:
         star.to_csv(filePath+'\\comm_'+name+'.csv',index = False,header = False)
@@ -216,7 +216,7 @@ def issues(name):
             print(name,num,'stop')
             break
     if over ==False:
-        if not os.path.exist(filePath+'\\issu_'+name+'_'+str(num)+'.csv') and num > 1:
+        if not os.path.exists(filePath+'\\issu_'+name+'_'+str(num)+'.csv') and num > 1:
             star.to_csv(filePath+'\\issu_'+name+'_'+str(num)+'.csv',index = False,header = False)
     else:
         star.to_csv(filePath+'\\issu_'+name+'.csv',index = False,header = False)
