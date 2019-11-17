@@ -167,7 +167,7 @@ def commits(name):
 
 def issues(name):
     name1 = name.replace('_','/')
-    url = 'https://api.github.com/repos/'+name1+'/issues?page='
+    url = 'https://api.github.com/repos/'+name1+'/issues?state=all&page='
     star = pd.DataFrame(columns = ['id','text','time','tag','type'])
     filePath = 'E:\\7_Intern\\GGV\\issues'
     files = os.listdir(filePath)
@@ -202,12 +202,12 @@ def issues(name):
                 id1  = x[i]['id']
                 text = x[i]['title']
                 time1 = x[i]['created_at']
-                type1 = x[i]['closed_at']
+                type1 = x[i]['number']
                 tags  = x[i]['labels']
                 tag = ''
                 for j in range(len(tags)):
                     tag += tags[j]['name']+','
-                temp = pd.DataFrame([(id1,text,time1,tag,type1)],columns = ['id','text','time','tag','type'])
+                temp = pd.DataFrame([(id1,text,time1,tag,type1)],columns = ['id','text','time','tag','number'])
                 star = star.append(temp)
             e = time()
             print(url2,str(e-b)+' Cost')
